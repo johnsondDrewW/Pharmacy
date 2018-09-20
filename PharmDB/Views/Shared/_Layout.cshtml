@@ -1,0 +1,155 @@
+﻿<!DOCTYPE html>
+
+
+<script>
+    function sendtags() {
+        $("#tags").val($("#t").chosen().val())
+    }
+</script>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Inventory System</title>
+   
+   @Styles.Render("~/Content/css")
+   @Styles.Render("~/Content/chosen.css")
+   @Styles.Render("~/Content/chosen.min.css")
+   @Scripts.Render("~/bundles/modernizr")
+   @Scripts.Render("~/Scripts/jquery-1.10.2.min.js")
+   @Scripts.Render("~/bundles/jqueryval")
+   @Scripts.Render("~/Scripts/chosen.jquery.js")
+   @Scripts.Render("~/Scripts/chosen.jquery.min.js")
+   @Scripts.Render("~/Scripts/chosen.proto.js")
+
+
+    
+
+</head>
+
+
+<body>
+    <div class="page-header">
+        <div class="row text-center">
+            <img src="/Header.jpg" class="img-responsive" style="margin: 0 auto;">
+        </div>
+    </div>
+    @if(Request.IsAuthenticated)
+    { 
+                      
+    //Defines side bar and navigation buttons
+    <div class=" row">
+        <div class=" col-sm-2">
+            <div id=" wrapper">
+                <div id=" sidebar-wrapper">
+                    <div class=" list-group">
+                        <a href="@Url.Action("Index", "Home")" class=" list-group-item"> Home </a>
+                        <a href="@Url.Action("About", "Home")" class=" list-group-item">About</a>
+                        <a href="@Url.Action("Browse", "Item")" class=" list-group-item">Browse Items</a>
+                        <a href="@Url.Action("Create", "Item")" class=" list-group-item"> Create Items</a>
+                        <a href="@Url.Action("Reports", "Item")" class=" list-group-item">Reports</a>
+                        <a href="@Url.Action("Logout", "Account")" class=" list-group-item">Log off</a>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                @if(User.IsInRole("Admin"))
+                {
+                    <div class="col-sm-12">
+                        <div id="wrapper">
+                            <div id=" sidebar-wrapper">
+                                <div class=" list-group">
+                                    <a  class=" list-group-item"> admin </a>
+                                    <a href="@Url.Action("Index", "Category")" class=" list-group-item"> Categories</a>
+                                    <a href="@Url.Action("Users", "Account")" class=" list-group-item"> User managment</a>
+                                 </div>
+                            </div>
+                        </div>
+                    </div>
+                   
+                }
+               
+            </div>
+        </div>
+
+        @*//defines search bar*@
+        <div class=" col-sm-8">
+            @using (Html.BeginForm("SearchDetailed", "Item", FormMethod.Get))
+{
+                <p>
+                    <select name="searchField" >
+                        <option value="Name">Name</option>
+                        <option value="Description">Description</option>
+                        <option value="Source">Source</option>
+                        <option value="Comments">Comments</option>
+
+                    </select> 
+                    @Html.TextBox("SearchData", null, new {@style="width:600px;" })
+                    <select style="width:250px" id="t" multiple class="chosen-select-with-deselect">
+                       
+                    </select>
+                    <input type="hidden" name="tag" id="tag" value=""/>
+                    <input type="submit" value="Search" onclick="javascript:sendtags()"/>
+                </p>
+            }
+            <script>
+                $("#t").chosen();
+                $.ajax(
+            {
+                url: "/Category/tags",
+                type: "Post",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+                success: function (data) {
+                    var SeperatedData = data.split(",");
+                    
+                    $.each(SeperatedData, function (index, value) {
+                        $("#t").chosen().append($("<option></option>").val(value).html(value))
+
+                    })
+                   $("#t").trigger("chosen:updated")
+                },
+                failure: function () {
+                    alert("Something went wrong")
+                }
+            }
+            );
+            </script>
+            <div class=" panel panel-defualt">
+                <div class=" panel-body">
+                    @RenderBody()
+                    @RenderSection("Scripts", required: false)
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-2">
+            @RenderSection("rSideBar", required: false)
+        </div>
+    </div>
+    }
+    else
+    {
+             
+         <div class=" row">
+            <div class="col-sm-offset-4 col-sm-6 ">
+                <div class=" panel panel-defualt">
+                    <div class=" panel-body">
+                        @RenderBody()
+                        @RenderSection("rSideBar", required: false)
+                        @RenderSection("Scripts", required: false)
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+    
+    <div class="page-footer">
+        <div class="row text-center" >
+            <p> Made by Drew Johnson Copyrighted &#169; 2017</p>
+        </div>
+        
+    </div>
+    
+</body>
+
+</html>

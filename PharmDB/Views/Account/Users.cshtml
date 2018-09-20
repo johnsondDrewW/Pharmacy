@@ -1,0 +1,55 @@
+﻿@model IEnumerable<PharmDB.Models.ListUserViewModel>
+
+@{
+    ViewBag.Title = "Index";
+}
+@Scripts.Render("~/Scripts/jquery-1.10.2.min.js")
+@Scripts.Render("~/bundles/jqueryval")
+
+<script language="javascript" type="text/javascript">
+   function ChangeRole(id) {
+       alert("here");
+       $.ajax(
+            {
+              
+                url: "ChangeRole",
+                data: JSON.stringify({ 'ID': id }),
+                type: "post",
+                dataType: "json",
+                contentType: "application/json; charset=utf-8",
+
+            });
+
+    }
+</script>
+<h2>Users</h2>
+
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.Label("Name")
+        </th>
+        <th>
+            @Html.Label("Admin Access")
+        </th>
+        
+        <th></th>
+    </tr>
+    @foreach (var user in Model)
+    {
+        <tr>
+            <td>
+            @Html.DisplayFor(x=> user.users.UserName)
+        </td>
+            <td>
+                <input type="checkbox" name="CheckBox" @(Convert.ToBoolean(user.roles.Contains("Admin")) == true ? "checked='checked'" : string.Empty) 
+                       onclick="javascript:ChangeRole(@("'"+user.users.Id+"'"))" />
+
+            </td>
+        </tr>
+    }
+</table>
+
+
+

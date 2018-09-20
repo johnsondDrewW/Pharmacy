@@ -1,0 +1,54 @@
+﻿@model IEnumerable<PharmDB.Models.Category>
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Categories</h2>
+
+<p>
+    @Html.ActionLink("Create Category", "Create", null,new { @class ="MyLink"})
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Name)
+        </th>
+        <th>
+            @Html.DisplayName("Connected to")
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Description)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @foreach (var x in item.ParentCategory.Split(','))
+            {
+                if (!x.Contains("Main"))
+                {
+                    item.Name = "------" + item.Name;
+                }
+            }
+            @Html.DisplayFor(modelItem => item.Name)
+           
+            
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ParentCategory)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Description)
+        </td>
+        <td>
+            <a href="@Url.Action("Edit"+"/"+item.ID, "Category")"  class="MyLink"> Edit </a> |
+            <a href="@Url.Action("Details"+"/"+item.ID, "Category")" class="MyLink"> Details </a>|
+            <a href="@Url.Action("Delete"+"/"+item.ID, "Category")"  class="MyLink"> Delete </a>
+        </td>
+    </tr>
+}
+
+</table>

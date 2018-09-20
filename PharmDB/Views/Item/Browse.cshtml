@@ -1,0 +1,93 @@
+﻿@model PagedList.IPagedList<PharmDB.Models.Item>
+@using PagedList.Mvc;
+
+@{
+    ViewBag.Title = "Index";
+}
+<script language="javascript" type="text/javascript">
+
+    function OpenImage(ID)
+    {
+        window.open("/Item/Image/" + ID)
+        
+    }
+
+
+
+</script>
+<h2>Items</h2>
+
+<p>
+    @Html.ActionLink("Create Item", "Create", null, new { @class = "MyLink" })
+</p>
+
+<table class="table">
+    <tr>
+       <th>
+            Image 1
+        </th>
+        <th>
+           Image 2
+        </th>
+        <th>
+           Name
+        </th>
+        <th>
+            Stored At
+        </th>
+        <th>
+            Comments
+        </th>
+        <th>
+            Descripton
+        </th>
+        <th></th>
+    </tr>
+    
+
+@foreach (var item in Model) {
+    <tr>
+       <td>
+           @if (item.Image1 != null) {
+            <img src="data:image;base64,@System.Convert.ToBase64String(Model.FirstOrDefault(i => i.ID == item.ID).Image1)"  style="height: 100px; width: 100px" onclick="Javascript: OpenImage(@item.ID)"/>
+           }
+           else {
+               <img src ="/NoImage.jpg" style="height: 100px; width: 100px"/>
+           }
+        </td>
+        <td>
+            @if (item.Image2 != null) {
+            <img src="data:image;base64,@System.Convert.ToBase64String(Model.FirstOrDefault(i => i.ID == item.ID).Image2)" style="height: 100px; width: 100px"  onclick="Javascript: OpenImage(@item.ID)"/>
+            }
+            else {
+                <img src="/NoImage.jpg" style="height: 100px; width: 100px" />
+            }
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+       <td>
+            @Html.DisplayFor(modelItem => item.StoredLocation)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Comments)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Descritption)
+        </td>
+        <td>
+           <a href="@Url.Action("Edit" + "/" + item.ID, "Item")" class="MyLink"> Edit </a> |
+           <a href="@Url.Action("Details" + "/" + item.ID, "Item")"  class="MyLink"> Details </a>|
+           <a href="@Url.Action("Delete" + "/" + item.ID, "Item")" class="MyLink"> Delete </a>
+</td>
+    </tr>
+}
+
+</table>
+<div class="row text-center">
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+    <br/>
+    @Html.PagedListPager(Model, page => Url.Action("Browse/" + page, "Item" ));
+</div>
+
+

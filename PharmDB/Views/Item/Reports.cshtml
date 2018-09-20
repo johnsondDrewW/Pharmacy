@@ -1,0 +1,27 @@
+﻿@model PharmDB.Models.Report
+
+@{
+    ViewBag.Title = "Reports";
+}
+
+<h1>Reports</h1>
+<div class=" row">
+@Html.Label("Number of Items in the database: "+Model.numOfItems)
+</div>
+<div class="row">
+    @Html.Label("Total value: $"+Model.value)
+</div>
+<br/>
+<br/>
+<div class="row">
+    <div >
+  @foreach(var source in Model.Sources)
+  {
+      @Html.Label(source)
+      <br/>
+      <br/>
+      
+  }
+     </div>    
+</div>
+

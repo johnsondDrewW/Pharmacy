@@ -1,0 +1,132 @@
+﻿@model PagedList.IPagedList<PharmDB.Models.Item>
+@using PagedList.Mvc;
+@{
+    ViewBag.Title = "SearchDetailed";
+}
+<script language="javascript" type="text/javascript">
+
+    function OpenImage(ID)
+    {
+        window.open("/Item/Image/" + ID)
+
+    }
+
+
+
+</script>
+
+<h2>Items</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create", new {@class="btn btn-default" })
+</p>
+
+<table class="table">
+    <tr>
+       <th>
+            Image 1
+        </th>
+        <th>
+            Image 2
+        </th>
+        <th>
+            Name
+        </th>
+        <th>
+            Stored At
+        </th>
+        <th>
+            Comments
+        </th>
+        <th>
+            Description
+        </th>
+        <th></th>
+    </tr>
+    
+
+@foreach (var item in Model) {
+    <tr>
+       <td>
+           @if (item.Image1 != null) {
+            <img src="data:image;base64,@System.Convert.ToBase64String( Model.FirstOrDefault(i => i.ID == item.ID).Image1)" style="height: 100px; width: 100px" onclick="Javascript: OpenImage(@item.ID)" />
+           }
+           else {
+            <img src="/NoImage.jpg" style="height: 100px; width: 100px" />
+           }
+        </td>
+        <td>
+            @if ( item.Image2!=null)
+            {
+            <img src="data:image;base64,@System.Convert.ToBase64String( Model.FirstOrDefault(i => i.ID == item.ID).Image2)" style="height: 100px; width: 100px"  onclick="Javascript: OpenImage(@item.ID)"/>
+            }
+            else {
+                <img src="/NoImage.jpg" style="height: 100px; width: 100px" />
+            }
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Name)
+        </td>
+       <td>
+            @Html.DisplayFor(modelItem => item.StoredLocation)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Comments)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.Descritption)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.ID }) |
+            @Html.ActionLink("Details", "Details", new { id=item.ID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.ID })
+        </td>
+    </tr>
+}
+
+</table>
+<div class="row text-center">
+    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+    <br />
+    @Html.PagedListPager(Model, page => Url.Action("Browse/" + page, "Item"));
+</div>
+
+
+@section rSideBar{
+    
+}
+@*
+<div class="page-header">
+    <h1>Search results</h1>
+</div>
+@foreach (var item in Model)
+{
+    <div class="page-header">
+        <div class="row">
+            <div class="col-sm-2" >
+                <p>Images</p>
+                @if (item.Image1 != null)
+                {
+                    <img src="data:image;base64,@System.Convert.ToBase64String( Model.FirstOrDefault(i => i.ID == item.ID).Image1)" style="height: 100px; width: 100px" />
+                }
+                @if (item.Image2 != null)
+                {
+                    <img src="data:image;base64,@System.Convert.ToBase64String( Model.FirstOrDefault(i => i.ID == item.ID).Image2)" style="height: 100px; width: 100px" />
+                }
+            </div>
+            <div class="col-sm-2 ">
+                @Html.Label("Name:")
+                @Html.DisplayFor(modelItem => item.Name)
+                @Html.Display("Location Stored")
+                @Html.DisplayFor(modelItem => item.StoredLocation)
+
+            </div> 
+            <div class="col-sm-2 ">
+                
+                @Html.Label("Location Store:")
+                @Html.DisplayFor(modelItem => item.StoredLocation)
+
+            </div> 
+        </div>
+    </div>
+}*@
